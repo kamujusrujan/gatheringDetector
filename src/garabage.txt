@@ -1,0 +1,55 @@
+// navigator.mediaDevices
+    //   .getUserMedia({ audio: true })
+    //   .then((mediaStream) => {
+    //     this.getMedia(mediaStream);
+    //   })
+    //   .catch(() => {
+    //     console.log('failed');
+    //   });
+    // this.startMic();
+
+
+
+
+    // sample = async () => {
+  //   const model = await tf.loadGraphModel(URL);
+  //   let inp = tf.zeros([1, 80000, 1]);
+
+  //   let out = await model.executeAsync({ 'input_1:0': inp }, ['Identity:0']);
+  //   console.log(out.shape);
+  // };
+
+
+
+
+   getMedia = async (mediaStream) => {
+    var audioContext = new (window.AudioContext || window.webkitAudioContext)({
+      sampleRate: 16000,
+    });
+    var source = audioContext.createMediaStreamSource(mediaStream);
+    var node = audioContext.createScriptProcessor(1024, 1, 1);
+    node.onaudioprocess = function (data) {
+     
+      console.log(data);
+    };
+    source.connect(node);
+    node.connect(audioContext.destination);
+  };
+
+
+  
+  // saveAudio = (data) => {
+  //   var context = new (window.AudioContext || window.webkitAudioContext)();
+  //   var source = context.createBufferSource();
+  //   if (context.decodeAudioData) {
+  //     context.decodeAudioData(
+  //       data,
+  //       function (buffer) {
+  //         console.log(buffer);
+  //       },
+  //       function (e) {
+  //         console.log(e);
+  //       }
+  //     );
+  //   }
+  // };
