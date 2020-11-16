@@ -7,5 +7,7 @@ validation accuracy is over 40%. Converted audio to spectrogram with 512 fft len
 
 Problems to solve : 
 	1. tf data microphone library outputs and spicy spectrogram scaled output validation
+
 	2. Scaling input data. Presently using tf norm layer to normalize 
+	
 	3. 
