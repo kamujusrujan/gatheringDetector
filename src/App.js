@@ -11,9 +11,11 @@ import * as fs from 'fs';
 // import * as tfn from '@tensorflow/tfjs-node';
 // let audio = [];
 
-const URL =
-  'https://cors-anywhere.herokuapp.com/' +
-  'https://sample-bucket095.s3.us-east-2.amazonaws.com/export_1.0/model.json';
+// const URL =
+//   'https://cors-anywhere.herokuapp.com/' +
+//   'https://sample-bucket095.s3.us-east-2.amazonaws.com/export_1.0/model.json';
+
+const URL = 'http://172.28.96.1:8080/model.json';
 
 export class Example extends Component {
   constructor(props) {
@@ -25,10 +27,10 @@ export class Example extends Component {
     };
     this.sec_5 = [];
     this.config = {
-      fftSize: 1024,
+      fftSize: 512,
       sampleRateHz: 48000,
-      numFramesPerSpectrogram: 267,
-      columnTruncateLength: 513,
+      numFramesPerSpectrogram: 500,
+      columnTruncateLength: 100,
     };
     // this.tick = null;
   }
@@ -49,15 +51,21 @@ export class Example extends Component {
       includeSpectrogram: true,
     });
     console.log('init mic data .. and collecting ');
+    this.model = await tf.loadLayersModel('http://192.168.1.8:8080/model.json');
+    console.log('Loaded Model');
     setInterval(this.startCollectingDate, 5000);
   };
 
   startCollectingDate = async () => {
     const micData = await this.mic.capture();
     let spec = micData.spectrogram;
-    // spec = tf.div(spec, spec.norm());
+    // spec = tf.abs(tf.div(spec, spec.norm()));
+    // spec = tf.squeeze(spec);
     spec.print();
-    // micData.spectrogram.prin();
+    spec = tf.reshape(spec, [1, 500, 100]);
+    let ans = this.model.predict(spec);
+    ans = tf.squeeze(ans);
+    ans.argMax().print();
   };
 
   startMic = async () => {
